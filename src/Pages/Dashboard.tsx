@@ -35,7 +35,10 @@ const data = {
 export default function Dashboard() {
     return (
         <div>
-            <h1 className="font-medium text-[#228B22] text-2xl">Dashboard</h1>
+            <header className="mb-5">
+                <h1 className="font-medium text-[#228B22] text-2xl">Dashboard</h1>
+                 <p className="text-[#2C3E50] text-[1rem]">Informacion general y relevante sobre tu usuario</p>
+            </header>
             <div className="grid grid-cols-2 gap-y-10">
                 <div className="h-full w-full">
                     <Bar data={data}></Bar>

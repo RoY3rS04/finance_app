@@ -3,7 +3,7 @@ import LogoImage from '../assets/360_F_223091926_taex8viqFkpWkmWd2isa6jijLAnZWKT
 
 export function AppLayout() {
     return (
-        <div style={{ fontFamily: "Afacad Flux" }} className="h-screen w-full flex bg-[#ECF0F1] text-xl">
+        <div style={{ fontFamily: "Afacad Flux" }} className="min-h-screen w-full flex bg-[#a9dfbf41] text-xl">
             <div className="w-[200px] mt-5 ml-5">
                 <a href="/" className="flex items-center gap-x-1 mb-8">
                     <div className="w-[50px] h-[60px]">
@@ -50,7 +50,7 @@ export function AppLayout() {
                     </a>
                 </nav>
             </div>
-            <main className="flex-1 rounded-lg shadow-lg bg-white mt-2 p-5">
+            <main className="flex-1 rounded-lg shadow-xl mt-2 bg-[#f5f8f9] p-5">
                 <Outlet/>
             </main>
         </div>
