@@ -1,4 +1,4 @@
-import { CardInfo } from "../types/InfoCard";
+import { CardInfo } from "../types/myTypes";
 
 export function InfoCard(cardInfo : CardInfo) {
     return (

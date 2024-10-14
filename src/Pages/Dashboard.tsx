@@ -34,18 +34,15 @@ const data = {
 
 export default function Dashboard() {
     return (
-        <div>
-            <header className="mb-5">
+        <div className="flex flex-col gap-y-5">
+            <header className="">
                 <h1 className="font-medium text-[#228B22] text-2xl">Dashboard</h1>
                  <p className="text-[#2C3E50] text-[1rem]">Informacion general y relevante sobre tu usuario</p>
             </header>
-            <div className="grid grid-cols-2 gap-y-10">
-                <div className="h-full w-full">
-                    <Bar data={data}></Bar>
-                </div>
-                <div className="h-full w-full">
-                    <Bar data={data}></Bar>
-                </div>
+            <div className="p-5 bg-white rounded-md shadow-xl text-3xl font-semibold relative overflow-hidden">
+              Bienvenido de vuelta RoYerS!
+              <span className="absolute bg-green-400 w-10 h-10 inline-block top-0 right-0 rounded-bl-[100%]">
+              </span>
             </div>
         </div>
     )

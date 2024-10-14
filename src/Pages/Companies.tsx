@@ -1,10 +1,9 @@
 import { InfoCard } from '../Components/InfoCard';
-import { CardInfo } from '../types/InfoCard';
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler, BarElement } from "chart.js";
 import ChartCard from '../Components/ChartCard';
+import { CardInfo, ModelType } from '../types/myTypes';
 import List from '../Components/List';
-import { CompanyInfo } from '../types/CompanyInfo';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement,Title, Tooltip, Legend, Filler);
 
@@ -72,6 +71,40 @@ export default function Companies() {
                             </div>
                         </ChartCard>
                     </div>
+                </div>
+                <div>
+                    <List title='Empresas' data={[
+                        {
+                            model: ModelType.Company,
+                            phoneNumber: '14141413',
+                            name: 'Finance',
+                            description: 'sup bro how is it going'
+                        },
+                        {
+                            model: ModelType.Company,
+                            phoneNumber: '14141413',
+                            name: 'Finance',
+                            description: 'sup bro how is it going'
+                        },
+                        {
+                            model: ModelType.Company,
+                            phoneNumber: '14141413',
+                            name: 'Finance',
+                            description: 'sup bro how is it going'
+                        },
+                        {
+                            model: ModelType.Company,
+                            phoneNumber: '14141413',
+                            name: 'Finance',
+                            description: 'sup bro how is it going'
+                        },
+                        {
+                            model: ModelType.Company,
+                            phoneNumber: '14141413',
+                            name: 'Finance',
+                            description: 'sup bro how is it going'
+                        }
+                    ]}></List>
                 </div>
             </section>
         </div>
