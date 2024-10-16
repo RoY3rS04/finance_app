@@ -5,7 +5,16 @@ export enum ModelType {
     Chart
 }
 
-export type Model = CompanyInfo | ChartInfo;
+export enum File_Folder {
+    File,
+    Folder
+}
+
+interface CouldHasChildren {
+    children?: ReactNode,
+}
+
+export type Model = CompanyInfo;
 
 export interface CompanyInfo {
     name: string,
@@ -14,14 +23,12 @@ export interface CompanyInfo {
     model: ModelType.Company
 }
 
-export interface ChartInfo {
-    children: ReactNode,
+export interface ChartInfo extends CouldHasChildren {
     chartTitle: string,
     chartDescription?: string,
-    model: ModelType.Chart
 }
 
-export interface CardInfo {
+export interface CardInfo extends CouldHasChildren {
     cardTitle: string,
     cardValue: string,
     cardExtra?: string
@@ -30,4 +37,10 @@ export interface CardInfo {
 export interface ListInfo<T> {
     title: string,
     data: T[]
+}
+
+export interface FileOrFolder {
+    name: string,
+    url: string,
+    type: File_Folder
 }
