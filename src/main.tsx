@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AppLayout } from './Layout/AppLayout';
+import Ratios from './Pages/Ratios';
+import Analysis from './Pages/Analysis';
+import OriginApplication from './Pages/Origin_Application';
+/*import { AppLayout } from './Layout/AppLayout';
 import Dashboard from './Pages/Dashboard';
 import Companies from './Pages/Companies';
 import Files from './Pages/Files';
@@ -41,7 +45,28 @@ const router = createBrowserRouter([
       }
     ]
   }
-]);
+]);*/
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <AppLayout></AppLayout>,
+    children: [
+      {
+        index: true,
+        element: <Ratios></Ratios>
+      },
+      {
+        path: '/analysis',
+        element: <Analysis></Analysis>
+      },
+      {
+        path: '/origin_application',
+        element: <OriginApplication></OriginApplication>
+      }
+    ]
+  }
+])
 
 createRoot(document.getElementById('root')!).render(
     <RouterProvider router={router}/>
