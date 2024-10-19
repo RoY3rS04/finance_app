@@ -3,9 +3,10 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AppLayout } from './Layout/AppLayout';
-import Ratios from './Pages/Ratios';
 import Analysis from './Pages/Analysis';
 import OriginApplication from './Pages/Origin_Application';
+import FinancialStatements from './Pages/FinancialStatements';
+import Ratios from './Pages/Ratios';
 /*import { AppLayout } from './Layout/AppLayout';
 import Dashboard from './Pages/Dashboard';
 import Companies from './Pages/Companies';
@@ -54,6 +55,10 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <FinancialStatements></FinancialStatements>
+      },
+      {
+        path: '/ratios',
         element: <Ratios></Ratios>
       },
       {

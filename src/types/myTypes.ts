@@ -44,3 +44,16 @@ export interface FileOrFolder {
     url: string,
     type: File_Folder
 }
+
+export interface BalanceSheet {
+    assets: Account[],
+    liabilities: Account[],
+    capital: Account[]
+}
+
+interface Account {
+    name: string,
+    value: number
+}
+
+type AssetAccount = "Caja" | "Banco" | "Inversiones"
