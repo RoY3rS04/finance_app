@@ -11,10 +11,12 @@ export const useDataStore = create<DataStore>()((set) => ({
             return state;
         }
 
+        state.periods.push(...createSheets(1))
+
         return (
             {
                 periods_q: state.periods_q + 1,
-                periods: createSheets(state.periods_q + 1)
+                periods: state.periods 
             }
         )
     }),
@@ -23,21 +25,23 @@ export const useDataStore = create<DataStore>()((set) => ({
             return state;
         }
 
+        state.periods.pop()
+
         return (
             {
                 periods_q: state.periods_q - 1,
-                periods: createSheets(state.periods_q - 1)
+                periods: state.periods
             }
         )
     }),
-    onChangeAccount: (period: number, accountPath: AccountPath, val: number) => set((state) => {
+    onChangeAccount: (period: number, accountPath: AccountPath, val?: number) => set((state) => {
 
         const periods = state.periods;
 
-        console.log(accountPath, period);
-
         if (accountPath.sheet === 'balance_sheet' && accountPath.accountD === 'assets' && accountPath.accountT === 'circulantes' && isAssetCirAccount(accountPath.name)) {
             periods[period - 1][accountPath.sheet][accountPath.accountD][accountPath.accountT][accountPath.name] = val;
+
+            console.log(periods[period - 1][accountPath.sheet][accountPath.accountD][accountPath.accountT][accountPath.name]);
         }
         
         return ({periods})

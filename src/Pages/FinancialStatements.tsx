@@ -17,8 +17,14 @@ export default function FinancialStatements() {
         return displayedPeriods;
     }
 
+    function onSubmit(e: React.FormEvent) {
+        e.preventDefault();
+
+        console.log(periods);
+    }
+
     return (
-        <form className='my-10 mx-5'>
+        <form onSubmit={onSubmit} className='my-10 mx-5'>
             <div className="flex items-center gap-x-3 mb-5">
                 <button type="button" className="w-10 h-10 p-2 rounded-full text-white bg-[#2C3E50] font-bold" onClick={decreasePeriods}>-</button>
                 <p className="text-lg font-medium">Periodos</p>
@@ -37,44 +43,44 @@ export default function FinancialStatements() {
                         <div id='a-circulantes' className="flex flex-col gap-y-2">
                             <a href="#a-circulantes" className="text-lg text-[#6B8E23] font-medium sticky bg-white top-20 left-0 pt-5">Circulantes</a>
                             <div className="flex flex-col gap-y-2">
-                                <AccountInput val={periods[0]['balance_sheet']['assets']['circulantes']['caja']} account={{
+                                <AccountInput displayName="Caja" account={{
                                     name: 'caja',
                                     accountD: 'assets',
                                     accountT: 'circulantes',
                                     sheet: 'balance_sheet'
                                 }}></AccountInput>
-                                <AccountInput val={['balance_sheet']['assets']['circulantes']['caja']} account={{
-                                    name: 'caja',
+                                <AccountInput displayName="Efectivo" account={{
+                                    name: 'efectivo',
                                     accountD: 'assets',
                                     accountT: 'circulantes',
                                     sheet: 'balance_sheet'
                                 }}></AccountInput>
-                                <AccountInput val={periods[0]['balance_sheet']['assets']['circulantes']['caja']} account={{
-                                    name: 'caja',
+                                <AccountInput displayName="Inversiones" account={{
+                                    name: 'inversiones',
                                     accountD: 'assets',
                                     accountT: 'circulantes',
                                     sheet: 'balance_sheet'
                                 }}></AccountInput>
-                                <AccountInput val={periods[0]['balance_sheet']['assets']['circulantes']['caja']} account={{
-                                    name: 'caja',
+                                <AccountInput displayName="Banco" account={{
+                                    name: 'banco',
                                     accountD: 'assets',
                                     accountT: 'circulantes',
                                     sheet: 'balance_sheet'
                                 }}></AccountInput>
-                                <AccountInput val={periods[0]['balance_sheet']['assets']['circulantes']['caja']} account={{
-                                    name: 'caja',
+                                <AccountInput displayName="Cuentas por cobrar" account={{
+                                    name: 'cuentas_cobrar',
                                     accountD: 'assets',
                                     accountT: 'circulantes',
                                     sheet: 'balance_sheet'
                                 }}></AccountInput>
-                                <AccountInput val={periods[0]['balance_sheet']['assets']['circulantes']['caja']} account={{
-                                    name: 'caja',
+                                <AccountInput displayName="Inventario" account={{
+                                    name: 'inventario',
                                     accountD: 'assets',
                                     accountT: 'circulantes',
                                     sheet: 'balance_sheet'
                                 }}></AccountInput>
-                                <AccountInput val={periods[0]['balance_sheet']['assets']['circulantes']['caja']} account={{
-                                    name: 'caja',
+                                <AccountInput displayName="Documentos por cobrar" account={{
+                                    name: 'docs_cobrar',
                                     accountD: 'assets',
                                     accountT: 'circulantes',
                                     sheet: 'balance_sheet'
@@ -84,28 +90,108 @@ export default function FinancialStatements() {
                         <div id='a-no_circulantes' className="flex flex-col gap-y-2">
                             <a href="#a-no_circulantes" className="text-lg text-[#6B8E23] font-medium sticky bg-white top-20 left-0 py-2">No Circulantes</a>
                             <div className="flex flex-col gap-y-2">
-                                {/*<AccountInput name="Terreno"></AccountInput>
-                                <AccountInput name="Edificios"></AccountInput>
-                                <AccountInput name="Dep. Edificios"></AccountInput>
-                                <AccountInput name="Maquinaria y Equipo"></AccountInput>
-                                <AccountInput name="Dep. Maquinaria y Equipo"></AccountInput>
-                                <AccountInput name="Equipo Transporte"></AccountInput>
-                                <AccountInput name="Dep. Equipo Transporte"></AccountInput>
-                                <AccountInput name="Mobiliario y Equipo de Oficina"></AccountInput>
-                                <AccountInput name="Dep. Mobiliario y Equipo de Oficina"></AccountInput>*/}
+                                <AccountInput displayName="Terreno" account={{
+                                    name: 'terreno',
+                                    accountD: 'assets',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Edificios" account={{
+                                    name: 'edificios',
+                                    accountD: 'assets',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Dep. Edificios" account={{
+                                    name: 'dep_edificios',
+                                    accountD: 'assets',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Maquinaria y Equipo" account={{
+                                    name: 'maq_equipo',
+                                    accountD: 'assets',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Dep. Maquinaria y Equipo" account={{
+                                    name: 'dep_maq_equipo',
+                                    accountD: 'assets',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Equipo Transporte" account={{
+                                    name: 'equipo_transporte',
+                                    accountD: 'assets',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Dep. Equipo Transporte" account={{
+                                    name: 'dep_equipo_transp',
+                                    accountD: 'assets',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Mobiliario y Equipo de Oficina" account={{
+                                    name: 'mob_equipo_oficina',
+                                    accountD: 'assets',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Dep. Mobiliario y Equipo de Oficina" account={{
+                                    name: 'dep_mob_equipo_oficina',
+                                    accountD: 'assets',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
                             </div>
                         </div>
                         <div id='a-diferidos' className="flex flex-col gap-y-2">
                             <a href="#a-diferidos" className="text-lg text-[#6B8E23] font-medium sticky bg-white top-20 left-0 py-2">Diferidos</a>
                             <div className="flex flex-col gap-y-2">
-                                {/*<AccountInput name="Gastos Instalacion"></AccountInput>
-                                <AccountInput name="Amort. Gastos Instalacion"></AccountInput>
-                                <AccountInput name="Gastos de Organizacion"></AccountInput>
-                                <AccountInput name="Amort. Gastos de Organizacion"></AccountInput>
-                                <AccountInput name="Propaganda y Publicidad"></AccountInput>
-                                <AccountInput name="Franquicia"></AccountInput>
-                                <AccountInput name="Rentas pagadas por anticipado"></AccountInput>
-                            </div>*/}
+                                <AccountInput displayName="Gastos Instalacion" account={{
+                                    name: 'gastos_instalacion',
+                                    accountD: 'assets',
+                                    accountT: 'diferidos',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Amort. Gastos Instalacion" account={{
+                                    name: 'amort_gastos_inst',
+                                    accountD: 'assets',
+                                    accountT: 'diferidos',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Gastos de Organizacion" account={{
+                                    name: 'gastos_org',
+                                    accountD: 'assets',
+                                    accountT: 'diferidos',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Amort. Gastos de Organizacion" account={{
+                                    name: 'amort_gastos_org',
+                                    accountD: 'assets',
+                                    accountT: 'diferidos',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Propaganda y Publicidad" account={{
+                                    name: 'prop_publicidad',
+                                    accountD: 'assets',
+                                    accountT: 'diferidos',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Franquicia" account={{
+                                    name: 'franquicia',
+                                    accountD: 'assets',
+                                    accountT: 'diferidos',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Rentas pagadas por anticipado" account={{
+                                    name: 'rent_pagadas_ant',
+                                    accountD: 'assets',
+                                    accountT: 'diferidos',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                            </div>
                         </div>
                     </div>
                     <div className="flex flex-col gap-y-1">
@@ -113,22 +199,77 @@ export default function FinancialStatements() {
                         <div id="p-circulantes" className="flex flex-col gap-y-2 ">
                             <a href="#p-circulantes" className="text-lg font-medium text-[#6B8E23] sticky bg-white top-20 left-0 py-2">Circulantes</a>
                             <div className="flex flex-col gap-y-2">
-                                    {/*<AccountInput name="Proveedores"></AccountInput>
-                                <AccountInput name="Impuestos por pagar"></AccountInput>
-                                <AccountInput name="Creditos Bancarios"></AccountInput>
-                                <AccountInput name="Acreedores Diversos"></AccountInput>
-                                <AccountInput name="Documentos por pagar"></AccountInput>
-                                <AccountInput name="Sueldos por pagar"></AccountInput>*/}</div>
+                                <AccountInput displayName="Proveedores" account={{
+                                    name: 'proveedores',
+                                    accountD: 'liabilities',
+                                    accountT: 'circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Impuestos por pagar" account={{
+                                    name: 'imp_pagar',
+                                    accountD: 'liabilities',
+                                    accountT: 'circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Creditos Bancarios" account={{
+                                    name: 'creditos_banc',
+                                    accountD: 'liabilities',
+                                    accountT: 'circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Acreedores Diversos" account={{
+                                    name: 'acreedores_div',
+                                    accountD: 'liabilities',
+                                    accountT: 'circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Documentos por pagar" account={{
+                                    name: 'docs_pagar',
+                                    accountD: 'liabilities',
+                                    accountT: 'circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Sueldos por pagar" account={{
+                                    name: 'sueldos_pagar',
+                                    accountD: 'liabilities',
+                                    accountT: 'circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
                             </div>
                         </div>
                         <div id="p-no_circulantes" className="flex flex-col gap-y-2">
                             <a href="#p-no_circulantes" className="text-lg font-medium text-[#6B8E23] sticky bg-white top-20 left-0 py-2">No Circulantes</a>
                             <div className="flex flex-col gap-y-2">
-                                {/*<AccountInput name="Acreedores Hipotecarios"></AccountInput>
-                                <AccountInput name="Documentos por pagar L/P"></AccountInput>
-                                <AccountInput name="Creditos Bancarios L/P"></AccountInput>
-                                <AccountInput name="Rentas cobradas por anticipado"></AccountInput>
-                                <AccountInput name="Intereses cobrados por anticipado"></AccountInput>*/}
+                                <AccountInput displayName="Acreedores Hipotecarios" account={{
+                                    name: 'acreedores_hip',
+                                    accountD: 'liabilities',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Documentos por pagar L/P" account={{
+                                    name: 'docs_pagar_lp',
+                                    accountD: 'liabilities',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Creditos Bancarios L/P" account={{
+                                    name: 'creditos_banc_lp',
+                                    accountD: 'liabilities',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Rentas cobradas por anticipado" account={{
+                                    name: 'rents_cobradas_anti',
+                                    accountD: 'liabilities',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Intereses cobrados por anticipado" account={{
+                                    name: 'interes_cobrados_anti',
+                                    accountD: 'liabilities',
+                                    accountT: 'no_circulantes',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
                             </div>
                         </div>
                     </div>
@@ -136,11 +277,30 @@ export default function FinancialStatements() {
                         <h2 className="text-[1.35rem] font-semibold mt-5">Capital</h2>
                         <div id="p-circulantes" className="flex flex-col gap-y-2">
                             <div className="flex flex-col gap-y-2">
-                                {/*<AccountInput name="Capital Social"></AccountInput>
-                                <AccountInput name="Reserva Legal"></AccountInput>
-                                <AccountInput name="Reserva de Reinversion"></AccountInput>
-                                <AccountInput name="Utilidades Retenidas"></AccountInput>
-                                <AccountInput name="Utilidad del Ejercicio"></AccountInput>*/}
+                                <AccountInput displayName="Capital Social" account={{
+                                    name: 'capital_social',
+                                    accountD: 'capital',           sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Reserva Legal" account={{
+                                    name: 'reserva_legal',
+                                    accountD: 'capital',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Reserva de Reinversion" account={{
+                                    name: 'reserva_reinversion',
+                                    accountD: 'capital',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Utilidades Retenidas" account={{
+                                    name: 'utilidades_ret',
+                                    accountD: 'capital',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
+                                <AccountInput displayName="Utilidad del Ejercicio" account={{
+                                    name: 'utilidad_ejercicio',
+                                    accountD: 'capital',
+                                    sheet: 'balance_sheet'
+                                }}></AccountInput>
                             </div>
                         </div>
                     </div>
@@ -233,3 +393,4 @@ export default function FinancialStatements() {
                         <input className="rounded-md border-2" type='number' />
                     </div>
 */
+

@@ -59,44 +59,44 @@ export interface BalanceSheet {
 
 interface AssetsAccounts {
     circulantes: {
-        [K in AssetCirAccount]: number
+        [K in AssetCirAccount]?: number
     },
     no_circulantes: {
-        [K in AssetNoCirAccount]: number
+        [K in AssetNoCirAccount]?: number
     },
     diferidos: {
-        [K in AssetDifAccount]: number
+        [K in AssetDifAccount]?: number
     }
 }
 
 interface LiabilitiesAccounts {
     circulantes: {
-        [K in LiabilityCirAccount]: number
+        [K in LiabilityCirAccount]?: number
     },
     no_circulantes: {
-        [K in LiabilityNoCirAccount]: number
+        [K in LiabilityNoCirAccount]?: number
     }
 }
 
 type CapitalAccounts = {
-    [K in CapitalAccount]: number
+    [K in CapitalAccount]?: number
 }
 
 interface ResultAccounts {
     ventas: {
-        [K in SaleAccount]: number
+        [K in SaleAccount]?: number
     },
     costo_ventas: {
-        [K in SaleCostAccount]: number
+        [K in SaleCostAccount]?: number
     },
     gasto_ventas: {
-        [K in SalesExpenseAccount]: number
+        [K in SalesExpenseAccount]?: number
     },
     gasto_admin: {
-        [K in AdminExpenseAccount]: number
+        [K in AdminExpenseAccount]?: number
     },
     otros_ingresos: {
-        [K in OtherIns]: number
+        [K in OtherIns]?: number
     }
 }
 
@@ -113,7 +113,7 @@ export type SheetType = 'balance_sheet' | 'results_sheet';
 
 export type AccountType = 'circulantes' | 'no_circulantes' | 'diferidos';
 
-export type AccountDiv = 'assets' | 'liabilities' | 'capital' | 'ventas' | 'costo_ventas' | 'gasto_ventas' | 'gastos_admin' | 'otros_ingresos';
+export type AccountDiv = 'assets' | 'liabilities' | 'capital' | 'ventas' | 'costo_ventas' | 'gasto_ventas' | 'gasto_admin' | 'otros_ingresos';
 
 export type AssetCirAccount = 'caja' |
     'efectivo' |
@@ -200,7 +200,7 @@ export enum Accounts {
 export interface AccountPath {
     sheet: SheetType,
     accountD: AccountDiv,
-    accountT: AccountType,
+    accountT?: AccountType,
     name: string
 }
 
@@ -209,5 +209,5 @@ export interface DataStore {
     periods: Period[],
     addPeriods: () => void,
     decreasePeriods: () => void,
-    onChangeAccount: (period: number, accountPath: AccountPath, val: number) => void
+    onChangeAccount: (period: number, accountPath: AccountPath, val?: number) => void
 }
