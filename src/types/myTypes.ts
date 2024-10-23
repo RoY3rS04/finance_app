@@ -179,7 +179,8 @@ export type SalesExpenseAccount = 'sueldos_comisiones' |
 
 export type AdminExpenseAccount = 'sueldos_oficina' |
     'servicios_pub' |
-    'dep_edificio';
+    'dep_edificio' |
+    'dep_eq_oficina';
 
 export type OtherIns = 'div_cobrados';
 

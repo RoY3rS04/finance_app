@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { AccountPath, AccountType, DataStore, SheetType, Accounts } from '../types/myTypes';
 import { createSheets } from "../helpers/createSheets";
 import { isAssetCirAccount } from "../helpers/isAccount";
+import { getSheetValue } from "../helpers/getSheetValue";
 
 export const useDataStore = create<DataStore>()((set) => ({
     periods_q: 1,
@@ -36,14 +37,8 @@ export const useDataStore = create<DataStore>()((set) => ({
     }),
     onChangeAccount: (period: number, accountPath: AccountPath, val?: number) => set((state) => {
 
-        const periods = state.periods;
-
-        if (accountPath.sheet === 'balance_sheet' && accountPath.accountD === 'assets' && accountPath.accountT === 'circulantes' && isAssetCirAccount(accountPath.name)) {
-            periods[period - 1][accountPath.sheet][accountPath.accountD][accountPath.accountT][accountPath.name] = val;
-
-            console.log(periods[period - 1][accountPath.sheet][accountPath.accountD][accountPath.accountT][accountPath.name]);
-        }
+        getSheetValue(state.periods, period, accountPath, false, val)
         
-        return ({periods})
+        return ({periods: state.periods})
     })
 }))

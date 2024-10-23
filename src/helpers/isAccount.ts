@@ -102,7 +102,8 @@ export function isAdminExpenseAccount(account: string): account is AdminExpenseA
     return [
         'sueldos_oficina',
         'servicios_pub',
-        'dep_edificio'
+        'dep_edificio',
+        'dep_eq_oficina'
     ].includes(account)
 }
 

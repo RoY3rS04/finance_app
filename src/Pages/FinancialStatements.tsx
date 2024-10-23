@@ -316,46 +316,121 @@ export default function FinancialStatements() {
                     <div id='ventas' className="flex flex-col gap-y-2">
                         <a href="#ventas" className="text-[1.35rem] mt-5 font-semibold sticky bg-white top-20 left-0 py-2">Ventas</a>
                         <div className="flex flex-col gap-y-2">
-                            {/*<AccountInput name="Ventas"></AccountInput>
-                            <AccountInput name="Descuento sobre ventas"></AccountInput>
-                            <AccountInput name="Devoluciones sobre ventas"></AccountInput>*/}
+                            <AccountInput displayName="Ventas" account={{
+                                name: 'ventas',
+                                accountD: 'ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Descuento sobre ventas" account={{
+                                name: 'desc_ventas',
+                                accountD: 'ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Devoluciones sobre ventas" account={{
+                                name: 'dev_ventas',
+                                accountD: 'ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
                         </div>
                     </div>
                     <div id='costo-ventas' className="flex flex-col gap-y-2">
                         <a href="#costo-ventas" className="text-[1.35rem] mt-5 font-semibold sticky bg-white top-20 left-0 py-2">Costo de Venta</a>
                         <div className="flex flex-col gap-y-2">
-                            {/*<AccountInput name="Inventario Inicial"></AccountInput>
-                            <AccountInput name="Compras"></AccountInput>
-                            <AccountInput name="Gastos de Compras"></AccountInput>
-                            <AccountInput name="Descuento sobre compras"></AccountInput>
-                            <AccountInput name="Inventario Final"></AccountInput>*/}
+                            <AccountInput displayName="Inventario Inicial" account={{
+                                name: 'inv_inicial',
+                                accountD: 'costo_ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Compras" account={{
+                                name: 'compras',
+                                accountD: 'costo_ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Gastos de Compras" account={{
+                                name: 'gastos_compras',
+                                accountD: 'costo_ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Descuento sobre compras" account={{
+                                name: 'desc_compras',
+                                accountD: 'costo_ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Inventario Final" account={{
+                                name: 'inv_final',
+                                accountD: 'costo_ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
                         </div>
                     </div>
                     <div id='gasto-ventas' className="flex flex-col gap-y-2">
                         <a href="#gasto-ventas" className="text-[1.35rem] mt-5 font-semibold sticky bg-white top-20 left-0 py-2">Gastos de Venta</a>
                         <div className="flex flex-col gap-y-2">
-                            {/*<AccountInput name="Sueldos y comisiones"></AccountInput>
-                            <AccountInput name="Sueldos oficina de ventas"></AccountInput>
-                            <AccountInput name="Viaticos"></AccountInput>
-                            <AccountInput name="Fletes de mercancia remitidas"></AccountInput>
-                            <AccountInput name="Dep. Equipo Transporte"></AccountInput>
-                            <AccountInput name="Telefono"></AccountInput>*/}
+                            <AccountInput displayName="Sueldos y comisiones" account={{
+                                name: 'sueldos_comisiones',
+                                accountD: 'gasto_ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Sueldos oficina de ventas" account={{
+                                name: 'sueldos_ofi_ventas',
+                                accountD: 'gasto_ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Viaticos" account={{
+                                name: 'viaticos',
+                                accountD: 'gasto_ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Fletes de mercancia remitidas" account={{
+                                name: 'fletes_mercancias',
+                                accountD: 'gasto_ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Dep. Equipo Transporte" account={{
+                                name: 'dep_equipo_transp',
+                                accountD: 'gasto_ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Telefono" account={{
+                                name: 'telefono',
+                                accountD: 'gasto_ventas',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
                         </div>
                     </div>
                     <div id='gasto-admin' className="flex flex-col gap-y-2">
                         <a href="#gasto-admin" className="text-[1.35rem] mt-5 font-semibold sticky bg-white top-20 left-0 py-2">Gastos de Administracion</a>
                         <div className="flex flex-col gap-y-2">
-                            {/*<AccountInput name="Sueldos de oficina"></AccountInput>
-                            <AccountInput name="Servicios Publicos"></AccountInput>
-                            <AccountInput name="Dep. Edificio"></AccountInput>
-                            <AccountInput name="Dep. Equipo Oficina"></AccountInput>*/}
+                            <AccountInput displayName="Sueldos de oficina" account={{
+                                name: 'sueldos_oficina',
+                                accountD: 'gasto_admin',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Servicios Publicos" account={{
+                                name: 'servicios_pub',
+                                accountD: 'gasto_admin',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Dep. Edificio" account={{
+                                name: 'dep_edificio',
+                                accountD: 'gasto_admin',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
+                            <AccountInput displayName="Dep. Equipo Oficina" account={{
+                                name: 'dep_eq_oficina',
+                                accountD: 'gasto_admin',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
                         </div>
                     </div>
                     <div id='otros-ingresos' className="flex flex-col gap-y-2">
                         <a href="#otros-ingresos" className="text-[1.35rem] mt-5 font-semibold sticky bg-white top-20 left-0 py-2">Otros Ingresos</a>
                         <div className="flex flex-col gap-y-2">
-                            {/*<AccountInput name="Dividendos Cobrados"></AccountInput>
-                            <AccountInput name="Impuestos a la utilidad"></AccountInput>*/}
+                            <AccountInput displayName="Dividendos Cobrados" account={{
+                                name: 'div_cobrados',
+                                accountD: 'otros_ingresos',
+                                sheet: 'results_sheet'
+                            }}></AccountInput>
                         </div>
                     </div>
                     <StatementFooter goTo="resultados"></StatementFooter>
