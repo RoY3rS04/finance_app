@@ -16,6 +16,12 @@ return new class extends Migration
             $table->string('type_name');
             $table->timestamps();
         });
+
+        Schema::create('bs_account_subtypes', function (Blueprint $table) {
+            $table->id();
+            $table->string('subtype_name');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -24,5 +30,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('bs_account_types');
+        Schema::dropIfExists('bs_account_subtypes');
     }
 };
