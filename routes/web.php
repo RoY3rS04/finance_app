@@ -8,3 +8,7 @@ Route::get('/', function() {
         'name' => 'Doggy'
     ]);
 });
+
+Route::get('/periods', function() {
+    return inertia('Periods');
+});
