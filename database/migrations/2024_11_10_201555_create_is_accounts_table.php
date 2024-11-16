@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('account_name');
             $table->foreignId('is_account_type_id')->constrained();
+            $table->boolean('deleted')->default(false);
             $table->timestamps();
         });
     }

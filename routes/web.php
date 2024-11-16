@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AccountsController;
+use App\Http\Controllers\PeriodController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -9,6 +11,8 @@ Route::get('/', function() {
     ]);
 });
 
-Route::get('/periods', function() {
-    return inertia('Periods');
-});
+Route::resource('periods', PeriodController::class);
+
+Route::get('/accounts', [AccountsController::class, 'index']);
+
+Route::get('/accounts/types', [AccountsController::class, 'getAccountTypes']);

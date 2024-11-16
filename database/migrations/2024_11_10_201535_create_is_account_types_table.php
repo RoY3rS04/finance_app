@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('is_account_types', function (Blueprint $table) {
             $table->id();
             $table->string('type_name');
+            $table->boolean('deleted')->default(false);
             $table->timestamps();
         });
     }

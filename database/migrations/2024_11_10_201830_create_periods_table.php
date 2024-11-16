@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('periods', function (Blueprint $table) {
             $table->id();
+            $table->string('description');
             $table->foreignId('balance_sheet_id')->nullable()->unique()->constrained();
             $table->foreignId('income_statement_id')->nullable()->unique()->constrained();
             $table->timestamps();

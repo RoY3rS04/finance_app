@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('bs_account_types', function (Blueprint $table) {
             $table->id();
             $table->string('type_name');
+            $table->boolean('deleted')->default(false);
             $table->timestamps();
         });
 
         Schema::create('bs_account_subtypes', function (Blueprint $table) {
             $table->id();
             $table->string('subtype_name');
+            $table->boolean('deleted')->default(false);
             $table->timestamps();
         });
     }

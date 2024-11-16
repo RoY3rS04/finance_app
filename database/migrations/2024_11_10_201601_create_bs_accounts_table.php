@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('account_name');
             $table->foreignId('bs_account_type_id')->constrained();
-            $table->foreignId('bs_account_subtype_id')->constrained();
+            $table->foreignId('bs_account_subtype_id')->nullable()->constrained();
+            $table->boolean('deleted')->default(false);
             $table->timestamps();
         });
     }
