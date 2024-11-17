@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('balance_sheets', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('period_id')->unique()->constrained();
             $table->timestamps();
         });
     }

@@ -16,6 +16,7 @@ export default function AddAccount() {
         const { data } = await axios.get('/accounts/types');
 
         setAccountTypes(data);
+        console.log(data);
     }
 
     function onChangeStatement(e) {
