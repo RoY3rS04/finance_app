@@ -2,10 +2,11 @@ import { Link } from '@inertiajs/react';
 import LogoImage from '../../assets/logo.png'
 import { useModalStore } from '../stores/modalStore';
 import { useSidebarStore } from '../stores/sidebarStore';
+import Modal from '../Components/Modal';
 
 export function AppLayout({children}) {
 
-    const { isActive, toggle } = useModalStore();
+    const { isActive, modal } = useModalStore();
     const { isCollapsed, toggle: toggleSidebar} = useSidebarStore();
 
     return (
@@ -54,9 +55,14 @@ export function AppLayout({children}) {
                     {children}
                 </div>
             </main>
-            <div className={`h-screen w-full bg-black absolute top-0 left-0 opacity-30 ${isActive ? 'block': 'hidden'}`}>
+            <div className={`h-screen w-full bg-black absolute top-0 left-0 opacity-30 z-10 ${isActive ? 'block': 'hidden'}`}>
 
             </div>
+            {
+                isActive && <Modal title={modal.title}>
+                    {modal.content}
+                </Modal>
+            }
         </div>
     )
 }

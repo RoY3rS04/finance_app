@@ -16,3 +16,5 @@ Route::resource('periods', PeriodController::class);
 Route::get('/accounts', [AccountsController::class, 'index']);
 
 Route::get('/accounts/types', [AccountsController::class, 'getAccountTypes']);
+
+Route::patch('/accounts', [AccountsController::class, 'updateAccount']);

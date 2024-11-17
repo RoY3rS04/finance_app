@@ -26,16 +26,27 @@ class AccountsController extends Controller
                 return [
                     'id' => $account->id,
                     'account_name' => $account->account_name,
-                    'type_name' => $account->bs_account_type->type_name,
-                    'subtype_name' =>
-                    $account?->bs_account_subtype?->subtype_name,
+                    'type' => [
+                        'name' => $account->bs_account_type->type_name,
+                        'id' => $account->bs_account_type->id
+                    ],
+                    'subtype'
+                    => [
+                        'name' => $account?->bs_account_subtype?->subtype_name,
+                        'id' => $account?->bs_account_subtype?->id
+                    ],
+                    'statement_type' => 'balance_sheet'
                 ];
             }),
             'income_statement' => $income_statement_accounts->map(function ($account) {
                 return [
                     'id' => $account->id,
+                    'statement_type' => 'income_statement',
                     'account_name' => $account->account_name,
-                    'type_name' => $account->is_account_type->type_name,
+                    'type' => [
+                        'name' => $account->is_account_type->type_name,
+                        'id' => $account->is_account_type->id
+                    ],
                 ];
             })
         ];
@@ -57,5 +68,19 @@ class AccountsController extends Controller
             ]
         ]);
 
+    }
+
+    public function updateAccount(Request $request): JsonResponse {
+
+        $validated = $request->validate([
+            'accountName' => ['required', 'min:4'],
+            'accountType' => ['required'],
+            'selectedStatement' => ['required'],
+            'accountSubtype' => ['nullable']
+        ]);
+
+        return response()->json([
+            'request' => $validated
+        ]);
     }
 }

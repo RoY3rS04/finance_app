@@ -7,9 +7,13 @@ import { useModalStore } from "../stores/modalStore";
 
 export default function Accounts({catalog}) {
 
-    const { isActive, toggle } = useModalStore();
+    const { toggle, setModal } = useModalStore();
 
     function onClickAddAccountBtn() {
+        setModal({
+            title: 'Agrega una cuenta a tu catalogo',
+            content: <AddAccount></AddAccount>
+        });
         toggle();
     }
 
@@ -18,11 +22,11 @@ export default function Accounts({catalog}) {
         const accounts = catalog[financialStatement].filter(account => {
 
             if (account_type === 'Activo' || account_type === 'Pasivo') {
-                if (account.type_name === account_type && account.subtype_name === account_subtype) {
+                if (account.type.name === account_type && account.subtype.name === account_subtype) {
                     return true;
                 }
             } else {
-                if (account.type_name === account_type) {
+                if (account.type.name === account_type) {
                     return true;
                 }
             }
@@ -154,11 +158,6 @@ export default function Accounts({catalog}) {
                     </div>
                 </section>
             </article>
-            {
-                isActive && <Modal title='Agrega una cuenta a tu catalogo'>
-                    <AddAccount></AddAccount>
-                </Modal>
-            }
         </AppLayout>
     )
 

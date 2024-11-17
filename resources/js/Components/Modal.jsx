@@ -6,7 +6,7 @@ export default function Modal({ children, title }) {
 
     return (
         <div className="absolute top-0 left-0 h-screen w-full flex items-center justify-center">
-            <div className="bg-white rounded-md min-w-[400px] p-5 z-10 relative space-y-3">
+            <div className="bg-white rounded-md min-w-[400px] p-5 z-20 relative space-y-3">
                 <div className="flex items-center gap-x-3 justify-between">
                     <p className="text-xl font-medium">{title}</p>
                     <button onClick={toggle} className="text-gray-500">
