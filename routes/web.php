@@ -13,7 +13,7 @@ Route::get('/', function() {
 
 Route::resource('periods', PeriodController::class);
 
-Route::get('/accounts', [AccountsController::class, 'index']);
+Route::get('/accounts', [AccountsController::class, 'index'])->name('accounts.index');
 
 Route::get('/accounts/types', [AccountsController::class, 'getAccountTypes']);
 

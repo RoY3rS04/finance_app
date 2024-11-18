@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AccountItem from "../Components/AccountItem";
-import Modal from "../Components/Modal";
 import AddAccount from "../Forms/AddAccount";
 import { AppLayout } from "../Layout/AppLayout";
 import { useModalStore } from "../stores/modalStore";
+import { usePage } from "@inertiajs/react";
+import Alert from "../Components/Alert";
 
 export default function Accounts({catalog}) {
 
     const { toggle, setModal } = useModalStore();
+    const flash = usePage().props.flash;
+    const [alert, setAlert] = useState(flash.alert);
+
+    setTimeout(() => {
+        setAlert(null);
+    }, 5000)
 
     function onClickAddAccountBtn() {
         setModal({
@@ -39,6 +46,10 @@ export default function Accounts({catalog}) {
         return accounts;
 
     }
+
+    useEffect(() => {
+        setAlert(flash.alert);
+    }, [flash.alert])
 
     return (
         <AppLayout>
@@ -158,6 +169,7 @@ export default function Accounts({catalog}) {
                     </div>
                 </section>
             </article>
+            {alert && <Alert onClose={() => setAlert(null)} alertType={alert.type} msg={alert.msg}></Alert>}
         </AppLayout>
     )
 

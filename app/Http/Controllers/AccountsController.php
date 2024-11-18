@@ -9,17 +9,19 @@ use App\Models\BSAccountType;
 use App\Models\ISAccount;
 use App\Models\ISAccountType;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 use Inertia\Response;
 
 class AccountsController extends Controller
 {
     public function index(): Response {
 
-        $balance_sheet_accounts = BSAccount::with('bs_account_type', 'bs_account_subtype')->get();
+        $balance_sheet_accounts = BSAccount::with('bs_account_type', 'bs_account_subtype')->where('deleted', '=', '0')->get();
 
-        $income_statement_accounts = ISAccount::with('is_account_type')->get();
+        $income_statement_accounts = ISAccount::with('is_account_type')->where('deleted', '=', '0')->get();
 
         $catalog = [
             'balance_sheet' => $balance_sheet_accounts->map(function ($account) {
@@ -50,6 +52,8 @@ class AccountsController extends Controller
                 ];
             })
         ];
+        
+        //dd($catalog);
 
         return inertia('Accounts', [
             'catalog' => $catalog
@@ -70,17 +74,64 @@ class AccountsController extends Controller
 
     }
 
-    public function updateAccount(Request $request): JsonResponse {
+    public function updateAccount(Request $request): RedirectResponse {
 
         $validated = $request->validate([
             'accountName' => ['required', 'min:4'],
             'accountType' => ['required'],
-            'selectedStatement' => ['required'],
-            'accountSubtype' => ['nullable']
+            'lastStatementType' => ['required'],
+            'newStatementType' => ['required'],
+            'accountSubtype' => ['nullable'],
+            'account_id' => ['required']
         ]);
 
-        return response()->json([
-            'request' => $validated
+        $account = null;
+
+        if($validated['lastStatementType'] == 'balance_sheet') {
+
+            $account = BSAccount::find($validated['account_id']);
+
+            if($validated['lastStatementType'] == $validated['newStatementType']) {
+                
+                $account->account_name = $validated['accountName'];
+                $account->bs_account_type_id = $validated['accountType'];
+                $account->bs_account_subtype_id = $validated['accountSubtype'];
+
+            } else {
+                $account->deleted = true;
+
+                ISAccount::create([
+                    'account_name' => $validated['accountName'],
+                    'is_account_type_id' => $validated['accountType']
+                ]);
+            }
+
+            $account->save();
+            
+        } else if($validated['lastStatementType'] == 'income_statement') {
+            $account = ISAccount::find($validated['account_id']);
+
+            if($validated['lastStatementType'] == $validated['newStatementType']) {
+
+                $account->is_account_type_id = $validated['accountType'];
+                $account->account_name = $validated['accountName'];
+
+            } else {
+                $account->deleted = true;
+
+                BSAccount::create([
+                    'account_name' => $validated['accountName'],
+                    'bs_account_type_id' => $validated['accountType'],
+                    'bs_account_subtype_id' => $validated['accountSubtype']
+                ]);
+            }
+
+            $account->save();
+        }
+        
+        return redirect()->back(303)->with('alert', [
+            'type' => 'Success',
+            'msg' => 'Cuenta actualizada correctamente'
         ]);
     }
 }
