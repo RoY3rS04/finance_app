@@ -13,8 +13,14 @@ Route::get('/', function() {
 
 Route::resource('periods', PeriodController::class);
 
-Route::get('/accounts', [AccountsController::class, 'index'])->name('accounts.index');
+Route::get('/accounts', [AccountsController::class, 'index']);
 
 Route::get('/accounts/types', [AccountsController::class, 'getAccountTypes']);
 
 Route::patch('/accounts', [AccountsController::class, 'updateAccount']);
+
+Route::patch('/accounts/{id}', [AccountsController::class, 'removeAccount']);
+
+Route::post('/accounts', [AccountsController::class, 'createAccount']);
+
+Route::post('periods/{period}/accounts', [PeriodController::class, 'addAccounts']);

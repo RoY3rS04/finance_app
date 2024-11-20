@@ -1,13 +1,13 @@
 export default function Alert({alertType, msg, onClose}) {
 
-    const color = alertType === 'Success' ? '#69B979' : alertType === 'Error' ? '#DE6B6B' : alertType === 'warning' ? '#ECBD61' : '#4150D9';
+    const color = alertType === 'Success' ? 'text-[#69B979] border-[#69B979]' : alertType === 'Error' ? 'text-[#DE6B6B] border-[#DE6B6B]' : alertType === 'warning' ? 'text-[#ECBD61] border-[#ECBD61]' : 'text-[#4150D9] border-[#4150D9]';
     
-    const bgColor = alertType === 'Success' ? '#F4FDF6' : alertType === 'Error' ? '#FFF9F9' : alertType === 'Warning' ? '#FEFAF3' : '#F0F1F7';
+    const bgColor = alertType === 'Success' ? 'bg-[#F4FDF6]' : alertType === 'Error' ? 'bg-[#FFF9F9]' : alertType === 'Warning' ? 'bg-[#FEFAF3]' : 'bg-[#F0F1F7]';
 
     return (
-        <div className={`rounded-md border-[1px] text-[${color}] border-[${color}] bg-[${bgColor}] min-w-[150px] pl-1 pr-2 py-2 absolute bottom-10 right-10 `}>
+        <div className={`rounded-md border-[1px] ${color} ${bgColor} min-w-[150px] pl-1 pr-2 py-2 absolute bottom-10 right-10 `}>
             <div className="flex items-stretch gap-x-2">
-                <div className={`bg-[${color}] rounded-sm w-1`}>
+                <div className={`${color} rounded-sm w-1`}>
 
                 </div>
                 <div className="flex flex-1 flex-col h-full gap-y-1 relative">

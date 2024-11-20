@@ -74,6 +74,44 @@ class AccountsController extends Controller
 
     }
 
+    public function createAccount(Request $request): RedirectResponse {
+        $validated = $request->validate([
+            'accountName' => ['required', 'min:4'],
+            'accountType' => ['required'],
+            'statementType' => ['required'],
+            'accountSubtype' => ['nullable'],
+        ]);
+
+        if($validated['statementType'] == 'balance_sheet') {
+
+            if($validated['accountSubtype']) {
+                BSAccount::create([
+                    'account_name' => $validated['accountName'],
+                    'bs_account_type_id' => $validated['accountType'],
+                    'bs_account_subtype_id' => $validated['accountSubtype']
+                ]);
+            } else {
+                BSAccount::create([
+                    'account_name' => $validated['accountName'],
+                    'bs_account_type_id' => $validated['accountType']
+                ]);
+            }
+
+        } else {
+
+            ISAccount::create([
+                'account_name' => $validated['accountName'],
+                'is_account_type_id' => $validated['accountType']
+            ]);
+
+        }
+
+        return redirect()->back(303)->with('alert', [
+            'type' => 'Success',
+            'msg' => 'Cuenta creada correctamente'
+        ]); 
+    }
+
     public function updateAccount(Request $request): RedirectResponse {
 
         $validated = $request->validate([
@@ -92,12 +130,42 @@ class AccountsController extends Controller
             $account = BSAccount::find($validated['account_id']);
 
             if($validated['lastStatementType'] == $validated['newStatementType']) {
-                
+
+                $alreadyExists = BSAccount::where([
+                    ['account_name', '=', $validated['accountName']],
+                    ['deleted', '=', 0]
+                ])->first();
+
+                if ($alreadyExists) {
+
+                    return redirect()->back(303)->with('alert', [
+                        'type' => 'Error',
+                        'msg' => 'Ya existe una cuenta con esas caracteristicas'
+                    ]);
+                }
+
                 $account->account_name = $validated['accountName'];
                 $account->bs_account_type_id = $validated['accountType'];
-                $account->bs_account_subtype_id = $validated['accountSubtype'];
+
+                if ($account->bs_account_subtype_id && isset($validated['accountSubtype'])) {
+                    $account->bs_account_subtype_id = $validated['accountSubtype'];
+                }
 
             } else {
+
+                $alreadyExists = ISAccount::where([
+                    ['account_name', '=', $validated['accountName']],
+                    ['deleted', '=', 0]
+                ])->first();
+
+                if ($alreadyExists) {
+
+                    return redirect()->back(303)->with('alert', [
+                        'type' => 'Error',
+                        'msg' => 'Ya existe una cuenta con esas caracteristicas'
+                    ]);
+                }
+
                 $account->deleted = true;
 
                 ISAccount::create([
@@ -113,10 +181,37 @@ class AccountsController extends Controller
 
             if($validated['lastStatementType'] == $validated['newStatementType']) {
 
+                $alreadyExists = ISAccount::where([
+                    ['account_name', '=', $validated['accountName']],
+                    ['deleted', '=', 0]
+                ])->first();
+
+                if ($alreadyExists) {
+
+                    return redirect()->back(303)->with('alert', [
+                        'type' => 'Error',
+                        'msg' => 'Ya existe una cuenta con esas caracteristicas'
+                    ]);
+                }
+
                 $account->is_account_type_id = $validated['accountType'];
                 $account->account_name = $validated['accountName'];
 
             } else {
+
+                $alreadyExists = BSAccount::where([
+                    ['account_name', '=', $validated['accountName']],
+                    ['deleted', '=', 0]
+                ])->first();
+
+                if($alreadyExists) {
+
+                    return redirect()->back(303)->with('alert', [
+                        'type' => 'Error',
+                        'msg' => 'Ya existe una cuenta con esas caracteristicas'
+                    ]);
+                }
+
                 $account->deleted = true;
 
                 BSAccount::create([
@@ -132,6 +227,46 @@ class AccountsController extends Controller
         return redirect()->back(303)->with('alert', [
             'type' => 'Success',
             'msg' => 'Cuenta actualizada correctamente'
+        ]);
+    }
+
+    public function removeAccount(Request $request, string $id): RedirectResponse {
+
+        $validated = $request->validate([
+            'statementType' => ['required']
+        ]);
+
+        if($validated['statementType'] == 'balance_sheet') {
+            $account = BSAccount::find($id);
+
+            if (!$account) {
+                return redirect()->back(303)->with('alert', [
+                    'type' => 'Error',
+                    'msg' => 'No se encontro la cuenta que se desea eliminar'
+                ]);
+            }
+
+            $account->deleted = true;
+
+            $account->save();
+        } else {
+            $account = ISAccount::find($id);
+
+            if(!$account) {
+                return redirect()->back(303)->with('alert', [
+                    'type' => 'Error',
+                    'msg' => 'No se encontro la cuenta que se desea eliminar'
+                ]);
+            }
+
+            $account->deleted = true;
+
+            $account->save();
+        }
+
+        return redirect()->back(303)->with('alert', [
+            'type' => 'Success',
+            'msg' => 'Cuenta eliminada correctamente'
         ]);
     }
 }

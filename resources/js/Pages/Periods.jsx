@@ -1,20 +1,34 @@
+import { usePage } from "@inertiajs/react";
 import PeriodsList from "../Components/PeriodsList";
+import CreatePeriod from "../Forms/CreatePeriod";
 import { AppLayout } from "../Layout/AppLayout";
+import { useModalStore } from "../stores/modalStore";
+import { useEffect, useState } from "react";
+import Alert from "../Components/Alert";
 
-export default function Periods() {
+export default function Periods({periods}) {
 
-    const periods = [
-        {
-            id: 1,
-            description: 'Periodo al 31 de octubre del 2024',
-            created_at: new Date().toLocaleString('es-ES'),
-        },
-        {
-            id: 2,
-            description: 'Periodo al 31 de noviembre del 2024',
-            created_at: new Date().toLocaleString('es-ES'),
-        }
-    ];
+    const { setModal, toggle } = useModalStore();
+    const flash = usePage().props.flash;
+    const [alert, setAlert] = useState(flash.alert);
+
+    setTimeout(() => {
+        setAlert(null);
+    }, 5000);
+
+    useEffect(() => {
+        setAlert(flash.alert);
+    }, [flash.alert]);
+
+    function createPeriod() {
+
+        setModal({
+            title: 'Crea un periodo contable',
+            content: <CreatePeriod></CreatePeriod>
+        })
+        toggle();
+
+    }
 
     return (
         <AppLayout>
@@ -32,7 +46,7 @@ export default function Periods() {
                             <svg className="w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M3.9 54.9C10.5 40.9 24.5 32 40 32l432 0c15.5 0 29.5 8.9 36.1 22.9s4.6 30.5-5.2 42.5L320 320.9 320 448c0 12.1-6.8 23.2-17.7 28.6s-23.8 4.3-33.5-3l-64-48c-8.1-6-12.8-15.5-12.8-25.6l0-79.1L9 97.3C-.7 85.4-2.8 68.8 3.9 54.9z"/></svg>
                             <span className="">Filtros</span>
                         </button>
-                        <button className="flex items-center gap-x-2 bg-[#2C3E50] py-1 px-2 rounded-md text-white font-medium">
+                        <button onClick={createPeriod} className="flex items-center gap-x-2 bg-[#2C3E50] py-1 px-2 rounded-md text-white font-medium">
                             <svg className="w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"/></svg>
                             Agregar Periodo
                         </button>
@@ -43,6 +57,7 @@ export default function Periods() {
                     <PeriodsList list={periods}></PeriodsList>
                 </div>
             </article>
+            {alert && <Alert onClose={() => setAlert(null)} alertType={alert.type} msg={alert.msg}></Alert>}
         </AppLayout>
     )
 }

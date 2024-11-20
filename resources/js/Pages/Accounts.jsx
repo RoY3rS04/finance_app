@@ -3,7 +3,7 @@ import AccountItem from "../Components/AccountItem";
 import AddAccount from "../Forms/AddAccount";
 import { AppLayout } from "../Layout/AppLayout";
 import { useModalStore } from "../stores/modalStore";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import Alert from "../Components/Alert";
 
 export default function Accounts({catalog}) {
@@ -17,9 +17,21 @@ export default function Accounts({catalog}) {
     }, 5000)
 
     function onClickAddAccountBtn() {
+
+        const submit_action = (accountInfo, setErrors) => {
+            router.post('/accounts', accountInfo, {
+                onError: errors => {
+                    setErrors(errors);
+                },
+                onSuccess: () => {
+                    toggle();
+                }
+            })
+        };
+
         setModal({
             title: 'Agrega una cuenta a tu catalogo',
-            content: <AddAccount></AddAccount>
+            content: <AddAccount submit_action={submit_action}></AddAccount>
         });
         toggle();
     }
@@ -41,8 +53,6 @@ export default function Accounts({catalog}) {
             return false;
         });
 
-        //console.log(catalog[financialStatement]);
-
         return accounts;
 
     }
@@ -55,7 +65,7 @@ export default function Accounts({catalog}) {
         <AppLayout>
             <header className="flex items-center justify-between">
                 <div className="space-y-1">
-                    <h1 className="text-2xl">Catalogo de cuentas</h1>
+                    <h1 className="text-3xl">Catalogo de cuentas</h1>
                     <p>Administra las cuentas comunes de tus estados financieros</p>
                 </div>
                 <button onClick={onClickAddAccountBtn} className="flex items-center gap-x-2 bg-[#2C3E50] py-1 px-2 rounded-md text-white font-medium">
