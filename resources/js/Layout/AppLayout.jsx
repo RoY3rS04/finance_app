@@ -27,7 +27,7 @@ export function AppLayout({children}) {
                 periods: false,
                 accounts: false
             }))
-        } else if (currentLocation === '/periods') {
+        } else if (currentLocation.includes('/periods')) {
             setActivePages(prev => ({
                 home: false,
                 periods: true,
@@ -79,16 +79,16 @@ export function AppLayout({children}) {
                     </Link>
                 </nav>
                 {
-                    !isCollapsed ? <button onClick={toggleSidebar} className='rounded-full w-10 h-10 shadow-lg bg-white absolute top-[50%] right-[-20px] text-gray-500 flex items-center justify-center hover:bg-[#a0c752] hover:text-white'>
+                    !isCollapsed ? <button onClick={toggleSidebar} className='rounded-full w-10 h-10 shadow-lg bg-white absolute top-[50%] right-[-20px] text-gray-500 flex items-center justify-center hover:bg-[#a0c752] hover:text-white z-10'>
                         <svg width={15} height={15} fill='currentColor' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>
                     </button>
                     : 
-                    <button onClick={toggleSidebar} className='rounded-full w-10 h-10 shadow-lg bg-white absolute top-[50%] right-[-20px] text-gray-500 flex items-center justify-center hover:bg-[#a0c752] hover:text-white'>
+                    <button onClick={toggleSidebar} className='rounded-full w-10 h-10 shadow-lg bg-white absolute top-[50%] right-[-20px] text-gray-500 flex items-center justify-center hover:bg-[#a0c752] hover:text-white z-10'>
                         <svg width={15} height={15} fill='currentColor' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>
                     </button>
                 }
             </aside>
-            <main className='flex-1 p-5 rounded-md shadow-xl bg-white max-h-screen overflow-y-scroll'>
+            <main className='flex-1 p-5 rounded-md shadow-xl bg-white max-h-screen overflow-y-scroll relative'>
                 <div className='ml-3'>
                     {children}
                 </div>

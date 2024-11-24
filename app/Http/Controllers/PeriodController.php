@@ -5,8 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\BSAccount;
 use App\Models\ISAccount;
 use App\Models\Period;
+use App\Models\Ratio;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Response;
+
+enum RatioTypes: int {
+    case liquidity = 1;
+    case activity = 2;
+    case solvency = 3;
+    case profitability = 4;
+}
 
 class PeriodController extends Controller
 {
@@ -142,5 +152,184 @@ class PeriodController extends Controller
             ]
         ]);
 
+    }
+
+    public function addAccountSimplified(Request $request, Period $period): RedirectResponse {
+
+        $validated = $request->validate([
+            'account_info' => ['required'],
+            'ammount' => ['required']
+        ]);
+
+        $account_info = json_decode($validated['account_info']);
+
+        $period->load([
+            'balance_sheet.bs_account_details',
+            'income_statement.is_account_details'
+        ]);
+
+        if($account_info->type == 'balance_sheet') {
+
+            $alreadyExists = $period->balance_sheet->bs_account_details()
+                ->where('bs_account_id', '=', $account_info->id)
+                ->first();
+
+            if($alreadyExists) {
+                return redirect()->back(303)->with([
+                    'alert' => [
+                        'type' => 'Error',
+                        'msg' => 'Ya existe dicha cuenta en tu balance general!'
+                    ]
+                ]);
+            }
+
+            $period->balance_sheet->bs_account_details()->create([
+                'bs_account_id' => $account_info->id,
+                'ammount' => $validated['ammount']
+            ]);
+
+            return redirect()->back(303)->with([
+                'alert' => [
+                    'type' => 'Success',
+                    'msg' => 'Cuenta agregada correctamente a tu balance general!'
+                ]
+            ]);
+
+        } else {
+            $alreadyExists = $period->income_statement->is_account_details()
+                ->where('is_account_id', '=', $account_info->id)
+                ->first();
+
+            if ($alreadyExists) {
+                return redirect()->back(303)->with([
+                    'alert' => [
+                        'type' => 'Error',
+                        'msg' => 'Ya existe dicha cuenta en tu estado de resultados!'
+                    ]
+                ]);
+            }
+
+            $period->income_statement->is_account_details()->create([
+                'is_account_id' => $account_info->id,
+                'ammount' => $validated['ammount']
+            ]);
+
+            return redirect()->back(303)->with([
+                'alert' => [
+                    'type' => 'Success',
+                    'msg' => 'Cuenta agregada correctamente a tu estado de resultados!'
+                ]
+            ]);
+        }
+    }
+
+    public function getPeriodRatios(Period $period) {
+
+        $period->load('ratios');
+
+        $mappedRatios = $period->ratios->map(function ($ratio) use ($period) {
+            if($ratio->ratio_name == "Capital de Trabajo") {
+
+                $ratio->act_cir = DB::selectOne("SELECT dbo.getTotalCirculante(?) AS act_cir", [$period->id])->act_cir + 0;
+
+                $ratio->pas_cir = DB::selectOne("SELECT dbo.getTotalPasivoCirculante(?) AS pas_cir", [$period->id])->pas_cir + 0;
+
+                return $ratio;
+            }
+
+            return $ratio;
+        });
+
+        $period->unsetRelation('ratios');
+        $period->setRelation('ratios', $mappedRatios);
+
+        return inertia('PeriodRatios', [
+            'period' => $period,
+        ]);
+
+    }
+
+    public function calculateRatios(Period $period): RedirectResponse {
+
+        $period->load('ratios');
+
+        if(!$period->ratios->isEmpty()) {
+            return redirect()->back(303)->with([
+                'alert' => [
+                    'type' => 'Error',
+                    'msg' => 'Ya has hecho un analisis de las razones de este periodo!'
+                ]
+            ]);
+        }
+
+        $period->ratios()->saveMany([
+            new Ratio([
+                'ratio_type_id' => RatioTypes::liquidity,
+                'ratio_name' => 'Razon Circulante',
+                'value' => DB::selectOne("SELECT dbo.calculateRazonCirculante(?) AS razon_circulante", [$period->id])->razon_circulante + 0
+            ]),
+            new Ratio([
+                'ratio_type_id' => RatioTypes::liquidity,
+                'ratio_name' => 'Prueba Acida',
+                'value' => DB::selectOne("SELECT dbo.calculatePruebaAcida(?) AS prueba_acida", [$period->id])->prueba_acida + 0
+            ]),
+            new Ratio([
+                'ratio_type_id' => RatioTypes::liquidity,
+                'ratio_name' => 'Capital de Trabajo',
+                'value' => DB::selectOne("SELECT dbo.calculateCapitalNetoTrabajo(?) AS cap_trabajo", [$period->id])->cap_trabajo + 0
+            ]),
+            new Ratio([
+                'ratio_type_id' => RatioTypes::activity,
+                'ratio_name' => 'Rotacion de Inventario',
+                'value' => DB::selectOne("SELECT dbo.calculateRotacionInventarios(?) AS rotacion_inv", [$period->id])->rotacion_inv + 0
+            ]),
+            new Ratio([
+                'ratio_type_id' => RatioTypes::activity,
+                'ratio_name' => 'Rotacion cuentas por cobrar',
+                'value' => DB::selectOne("SELECT dbo.calculateRotacionCuentasPorCobrar(?) AS rotacion_cuentas_cobrar", [$period->id])->rotacion_cuentas_cobrar + 0
+            ]),
+            new Ratio([
+                'ratio_type_id' => RatioTypes::activity,
+                'ratio_name' => 'Periodo Promedio de Cobro',
+                'value' => DB::selectOne("SELECT dbo.calculatePeriodoPromedioCobro(?) AS periodo_prom_cobro", [$period->id])->periodo_prom_cobro + 0
+            ]),
+            new Ratio([
+                'ratio_type_id' => RatioTypes::solvency,
+                'ratio_name' => 'Deuda Total',
+                'value' => DB::selectOne("SELECT dbo.calculateDeudaTotal(?) AS deuda_total", [$period->id])->deuda_total + 0
+            ]),
+            new Ratio([
+                'ratio_type_id' => RatioTypes::solvency,
+                'ratio_name' => 'Pasivo-Capital',
+                'value' => DB::selectOne("SELECT dbo.calculatePasivoCapital(?) AS pasivo_capital", [$period->id])->pasivo_capital + 0
+            ]),
+            new Ratio([
+                'ratio_type_id' => RatioTypes::solvency,
+                'ratio_name' => 'Rotacion de intereses a utilidades',
+                'value' => DB::selectOne("SELECT dbo.calculateRotacionInteresUtilidades(?) AS rotacion_int_uti", [$period->id])->rotacion_int_uti + 0
+            ]),
+            new Ratio([
+                'ratio_type_id' => RatioTypes::profitability,
+                'ratio_name' => 'MUB',
+                'value' => DB::selectOne("SELECT dbo.calculateMargenUtilidadBruta(?) AS mun", [$period->id])->mun + 0
+            ]),
+            new Ratio([
+                'ratio_type_id' => RatioTypes::profitability,
+                'ratio_name' => 'MUO',
+                'value' => DB::selectOne("SELECT dbo.calculateMargenUtilidadOperativa(?) AS muo", [$period->id])->muo + 0
+            ]),
+            new Ratio([
+                'ratio_type_id' => RatioTypes::profitability,
+                'ratio_name' => 'MUN',
+                'value' => DB::selectOne("SELECT dbo.calculateMargenUtilidadNeta(?) AS mun", [$period->id])->mun + 0
+            ]),
+        ]);
+
+        return redirect()->back(303)->with([
+            'alert' => [
+                'type' => 'Success',
+                'msg' => 'Analisis realizado correctamente!'
+            ]
+        ]);
     }
 }

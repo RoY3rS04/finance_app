@@ -269,4 +269,13 @@ class AccountsController extends Controller
             'msg' => 'Cuenta eliminada correctamente'
         ]);
     }
+
+    public function getAccounts(): JsonResponse {
+
+        return response()->json([
+            'balance_sheet' => BSAccount::where('deleted', '=', '0')->get(),
+            'income_statement' => ISAccount::where('deleted', '=', '0')->get()
+        ]);
+
+    }
 }
