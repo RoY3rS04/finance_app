@@ -33,3 +33,7 @@ Route::get('/accounts_info', [AccountsController::class, 'getAccounts']);
 Route::get('/periods/{period}/ratios', [PeriodController::class, 'getPeriodRatios']);
 
 Route::post('/periods/{period}/ratios', [PeriodController::class, 'calculateRatios']);
+
+Route::patch('/periods/{period}/reports', [PeriodController::class, 'saveReportsInfo']);
+
+Route::patch('/periods/{period}/details', [PeriodController::class, 'deleteAccountDetail']);

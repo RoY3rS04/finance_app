@@ -88,7 +88,7 @@ export function AppLayout({children}) {
                     </button>
                 }
             </aside>
-            <main className='flex-1 p-5 rounded-md shadow-xl bg-white max-h-screen overflow-y-scroll relative'>
+            <main className='flex-1 p-5 rounded-md shadow-xl bg-white max-h-screen overflow-y-scroll'>
                 <div className='ml-3'>
                     {children}
                 </div>

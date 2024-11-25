@@ -1,6 +1,7 @@
+import { router } from "@inertiajs/react";
 import { useModalStore } from "../stores/modalStore";
 
-export default function RemoveAccount({account, action}) {
+export default function DeletePeriod({period}) {
 
     const { toggle } = useModalStore();
     
@@ -8,17 +9,17 @@ export default function RemoveAccount({account, action}) {
 
         e.preventDefault();
 
-        action();
+        router.delete(`/periods/${period.id}`);
 
         toggle();
     }
 
     return (
         <form className="space-y-3" onSubmit={handleSubmit}>
-            <p>
-                Estas seguro de que quieres eliminar la cuenta
-                <span className="text-lg font-medium"> {account.account_name}</span>?
-            </p>
+            <div className="flex flex-col gap-y-2">
+                Estas seguro de que quieres eliminar este periodo?
+                <span className="text-lg font-medium">{period.description}</span>
+            </div>
             <div className="flex items-center gap-x-3">
                 <button onClick={toggle} className="p-2 flex-1 rounded-md border-[1px] border-gray-500 text-gray-600" type="button">Cancelar</button>
                 <button className="flex flex-1 items-center justify-center gap-x-2 p-2 text-white font-semibold bg-red-600 rounded-md">

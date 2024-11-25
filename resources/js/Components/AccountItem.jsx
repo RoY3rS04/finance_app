@@ -3,6 +3,7 @@ import { useSubMenusStore } from "../stores/subMenusStore";
 import { useModalStore } from "../stores/modalStore";
 import EditAccount from "../Forms/EditAccount";
 import RemoveAccount from "../Forms/RemoveAccount";
+import { router } from "@inertiajs/react";
 
 export default function AccountItem({ account }) {
     
@@ -18,9 +19,16 @@ export default function AccountItem({ account }) {
     }
 
     function removeAccount() {
+
+        const removeAction = () => {
+            router.patch(`/accounts/${account.id}`, {
+                statementType: account.statement_type
+            });
+        }
+
         setModal({
             title: 'Elimina tu cuenta',
-            content: <RemoveAccount account={account}></RemoveAccount>
+            content: <RemoveAccount account={account} action={removeAction}></RemoveAccount>
         });
         toggle();
     }

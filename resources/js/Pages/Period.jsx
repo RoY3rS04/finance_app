@@ -15,7 +15,7 @@ export default function Period({period}) {
     const [alert, setAlert] = useState(flash.alert);
     const [periodInfo, setPeriodInfo] = useState({});
     const [catalog, setCatalog] = useState(null);
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState({});   
 
     useEffect(() => {
         setAlert(flash.alert);
@@ -33,7 +33,8 @@ export default function Period({period}) {
                         account_name: detail.bs_account.account_name,
                         account_type: detail.bs_account.bs_account_type.type_name,
                         account_subtype: detail.bs_account?.bs_account_subtype?.subtype_name,
-                        ammount: detail.ammount
+                        ammount: detail.ammount,
+                        statementType: 'balance_sheet'
                     }
                 })
             },
@@ -44,7 +45,8 @@ export default function Period({period}) {
                         id: detail.id,
                         account_name: detail.is_account.account_name,
                         account_type: detail.is_account.is_account_type.type_name,
-                        ammount: detail.ammount
+                        ammount: detail.ammount,
+                        statementType: 'income_statement'
                     }
                 })
             }
@@ -136,9 +138,29 @@ export default function Period({period}) {
         return accounts;
     }
 
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        const data = [];
+
+        for (let [key, val] of formData.entries()) {
+            if (key.includes('submit')) {
+                data.push(val);
+            }
+        }
+        
+        router.patch(`/periods/${period.id}/reports`, data);
+    }
+
     return (
         <AppLayout>
-            <h1 className="text-3xl">{period.description}</h1>
+            <div id="top" className="flex items-center justify-between">
+                <h1 className="text-3xl">{period.description}</h1>
+                <button form="reportsForm" type="submit" className="flex items-center gap-x-2 bg-[#2C3E50] py-1 px-2 rounded-md text-white font-medium">
+                    Guardar Cambios
+                </button>
+            </div>
             <nav className="flex items-center gap-x-5 mt-4 text-lg text-gray-600 border-b-2">
                 <Link className={`flex items-center gap-x-2 py-2 ${!window.location.pathname.includes('ratios') ? 'border-b-2 border-b-[#228B22] text-[#228B22]': null}`} href={`/periods/${period.id}`}>
                     <svg className="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-288-128 0c-17.7 0-32-14.3-32-32L224 0 64 0zM256 0l0 128 128 0L256 0zM80 64l64 0c8.8 0 16 7.2 16 16s-7.2 16-16 16L80 96c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64l64 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-64 0c-8.8 0-16-7.2-16-16s7.2-16 16-16zm16 96l192 0c17.7 0 32 14.3 32 32l0 64c0 17.7-14.3 32-32 32L96 352c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32zm0 32l0 64 192 0 0-64L96 256zM240 416l64 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-64 0c-8.8 0-16-7.2-16-16s7.2-16 16-16z"/></svg>
@@ -184,7 +206,7 @@ export default function Period({period}) {
                     </div>
                 </div>
             </div>
-            <article className="grid gap-x-[60px] grid-cols-2">
+            <form id="reportsForm" onSubmit={handleSubmit} className="grid gap-x-[60px] grid-cols-2">
                 <section>
                     <h2 className="text-2xl font-semibold text-[#6B8E23]">Balance General</h2>
                     <div className="space-y-10 mt-5">
@@ -194,19 +216,19 @@ export default function Period({period}) {
                                 <div className="space-y-2">
                                     <h4 className="text-[#2C3E50] text-lg font-medium">Circulantes</h4>
                                     <div className="space-y-3">
-                                        {getAccounts('balance_sheet', 'Activo', 'Circulante')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                                        {getAccounts('balance_sheet', 'Activo', 'Circulante')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                                     </div>
                                 </div>
                                 <div className="space-y-2">
                                     <h4 className="text-[#2C3E50] text-lg font-medium">Fijos</h4>
                                     <div className="space-y-3">
-                                        {getAccounts('balance_sheet', 'Activo', 'Fijo')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                                        {getAccounts('balance_sheet', 'Activo', 'Fijo')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                                     </div>
                                 </div>
                                 <div className="space-y-2">
                                     <h4 className="text-[#2C3E50] text-lg font-medium">Diferidos</h4>
                                     <div className="space-y-3">
-                                        {getAccounts('balance_sheet', 'Activo', 'Diferido')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                                        {getAccounts('balance_sheet', 'Activo', 'Diferido')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                                     </div>
                                 </div>
                             </div>
@@ -217,13 +239,13 @@ export default function Period({period}) {
                                 <div className="space-y-2">
                                     <h4 className="text-[#2C3E50] text-lg font-medium">Circulantes</h4>
                                     <div className="space-y-3">
-                                        {getAccounts('balance_sheet', 'Pasivo', 'Circulante')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                                        {getAccounts('balance_sheet', 'Pasivo', 'Circulante')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                                     </div>
                                 </div>
                                 <div className="space-y-2">
                                     <h4 className="text-[#2C3E50] text-lg font-medium">No Circulantes</h4>
                                     <div className="space-y-3">
-                                        {getAccounts('balance_sheet', 'Pasivo', 'No Circulante')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                                        {getAccounts('balance_sheet', 'Pasivo', 'No Circulante')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                                     </div>
                                 </div>
                             </div>
@@ -231,7 +253,7 @@ export default function Period({period}) {
                         <div className="space-y-2">
                             <h3 className="text-xl font-medium">Capital</h3>
                             <div className="space-y-3">
-                                {getAccounts('balance_sheet', 'Capital', null)?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                                {getAccounts('balance_sheet', 'Capital', null)?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                             </div>
                         </div>
                     </div>
@@ -242,54 +264,60 @@ export default function Period({period}) {
                         <div className="space-y-2">
                             <h3 className="text-xl font-medium">Ventas</h3>
                             <div className="space-y-3">
-                               {getAccounts('income_statement', 'Ventas')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                               {getAccounts('income_statement', 'Ventas')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                             </div>
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-medium">Costo de Venta</h3>
                             <div className="space-y-3">
-                                {getAccounts('income_statement', 'Costo de Venta')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                                {getAccounts('income_statement', 'Costo de Venta')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                             </div>
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-medium">Gastos de Venta</h3>
                             <div className="space-y-3">
-                                {getAccounts('income_statement', 'Gastos de Venta')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                                {getAccounts('income_statement', 'Gastos de Venta')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                             </div>
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-medium">Gastos de Administracion</h3>
                             <div className="space-y-3">
-                               {getAccounts('income_statement', 'Gastos de Administracion')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                               {getAccounts('income_statement', 'Gastos de Administracion')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                             </div>
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-medium">Gastos Financieros</h3>
                             <div className="space-y-3">
-                                {getAccounts('income_statement', 'Gastos Financieros')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                                {getAccounts('income_statement', 'Gastos Financieros')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                             </div>
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-medium">Producto Financiero</h3>
                             <div className="space-y-3">
-                                {getAccounts('income_statement', 'Producto Financiero')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                                {getAccounts('income_statement', 'Producto Financiero')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                             </div>
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-medium">Otros Gastos</h3>
                             <div className="space-y-3">
-                                {getAccounts('income_statement', 'Otros Gastos')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                                {getAccounts('income_statement', 'Otros Gastos')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                             </div>
                         </div>
                         <div className="space-y-2">
                             <h3 className="text-xl font-medium">Otros Ingresos</h3>
                             <div className="space-y-3">
-                                {getAccounts('income_statement', 'Otros Ingresos')?.map(a => <AccountValue key={a.id} account={a}>{a.ammount}</AccountValue>)}
+                                {getAccounts('income_statement', 'Otros Ingresos')?.map(a => <AccountValue key={a.id} periodId={period.id} detail={a}>{a.ammount}</AccountValue>)}
                             </div>
                         </div>
                     </div>
                 </section>
-            </article>
+            </form>
+            <div className="flex items-center w-full justify-between sticky bottom-0 right-0">
+                <span></span>
+                <a className="rounded-full w-10 h-10 bg-white shadow-sm border-[1px] flex items-center justify-center hover:bg-[#a0c752] hover:text-white" href="#top">
+                    <svg className="w-4 h-4" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2 160 448c0 17.7 14.3 32 32 32s32-14.3 32-32l0-306.7L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>                   
+                </a>
+            </div>
             {alert && <Alert onClose={() => setAlert(null)} alertType={alert.type} msg={alert.msg}></Alert>}
         </AppLayout>
     )

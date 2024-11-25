@@ -11,7 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Response;
 
-enum RatioTypes: int {
+enum RatioTypes: int
+{
     case liquidity = 1;
     case activity = 2;
     case solvency = 3;
@@ -50,9 +51,9 @@ class PeriodController extends Controller
 
         $period = Period::create($validated);
 
-        $period->balance_sheet()->create([]); 
+        $period->balance_sheet()->create([]);
         $period->income_statement()->create([]);
-        
+
 
         return redirect()->back(303)->with([
             'alert' => [
@@ -89,7 +90,22 @@ class PeriodController extends Controller
      */
     public function update(Request $request, Period $period)
     {
-        //
+        $validated = $request->validate([
+            'description' => ['required', 'min:10'],
+            'created_at' => ['required']
+        ]);
+
+        $period->description = $validated['description'];
+        $period->created_at = $validated['created_at'];
+
+        $period->save();
+
+        return redirect()->back(303)->with([
+            'alert' => [
+                'type' => 'Success',
+                'msg' => 'Periodo actualizado correctamente!'
+            ]
+        ]);
     }
 
     /**
@@ -97,10 +113,34 @@ class PeriodController extends Controller
      */
     public function destroy(Period $period)
     {
-        //
+        $period->load('balance_sheet');
+        $period->load('income_statement');
+        $period->load('ratios');
+
+        if($period->balance_sheet) {
+            $period->balance_sheet->bs_account_details()->delete();
+            $period->balance_sheet->delete();
+        }
+
+        if($period->income_statement) {
+            $period->income_statement->is_account_details()->delete();
+            $period->income_statement->delete();
+        }
+
+        $period?->ratios()?->delete();
+
+        $period->delete();
+
+        return redirect()->back(303)->with([
+            'alert' => [
+                'type' => 'Success',
+                'msg' => 'Periodo eliminado correctamente!'
+            ]
+        ]);
     }
 
-    public function addAccounts(Request $request, Period $period) {
+    public function addAccounts(Request $request, Period $period)
+    {
 
         $validated = $request->validate([
             'accountName' => ['required', 'min:4'],
@@ -112,11 +152,11 @@ class PeriodController extends Controller
 
         $period = $period->load(['balance_sheet', 'income_statement']);
 
-        if($validated['statementType'] == 'balance_sheet') {
+        if ($validated['statementType'] == 'balance_sheet') {
 
             $account = BSAccount::where('account_name', '=', $validated['accountName'])->first();
 
-            if($account == null) {
+            if ($account == null) {
                 $account = BSAccount::create([
                     'account_name' => $validated['accountName'],
                     'bs_account_type_id' => $validated['accountType'],
@@ -128,7 +168,6 @@ class PeriodController extends Controller
                 'bs_account_id' => $account->id,
                 'ammount' => $validated['ammount']
             ]);
-        
         } else {
             $account = ISAccount::where('account_name', '=', $validated['accountName'])->first();
 
@@ -151,10 +190,10 @@ class PeriodController extends Controller
                 'msg' => 'Cuenta agregada correctamente!'
             ]
         ]);
-
     }
 
-    public function addAccountSimplified(Request $request, Period $period): RedirectResponse {
+    public function addAccountSimplified(Request $request, Period $period): RedirectResponse
+    {
 
         $validated = $request->validate([
             'account_info' => ['required'],
@@ -168,13 +207,13 @@ class PeriodController extends Controller
             'income_statement.is_account_details'
         ]);
 
-        if($account_info->type == 'balance_sheet') {
+        if ($account_info->type == 'balance_sheet') {
 
             $alreadyExists = $period->balance_sheet->bs_account_details()
                 ->where('bs_account_id', '=', $account_info->id)
                 ->first();
 
-            if($alreadyExists) {
+            if ($alreadyExists) {
                 return redirect()->back(303)->with([
                     'alert' => [
                         'type' => 'Error',
@@ -194,7 +233,6 @@ class PeriodController extends Controller
                     'msg' => 'Cuenta agregada correctamente a tu balance general!'
                 ]
             ]);
-
         } else {
             $alreadyExists = $period->income_statement->is_account_details()
                 ->where('is_account_id', '=', $account_info->id)
@@ -223,12 +261,13 @@ class PeriodController extends Controller
         }
     }
 
-    public function getPeriodRatios(Period $period) {
+    public function getPeriodRatios(Period $period)
+    {
 
         $period->load('ratios');
 
         $mappedRatios = $period->ratios->map(function ($ratio) use ($period) {
-            if($ratio->ratio_name == "Capital de Trabajo") {
+            if ($ratio->ratio_name == "Capital de Trabajo") {
 
                 $ratio->act_cir = DB::selectOne("SELECT dbo.getTotalCirculante(?) AS act_cir", [$period->id])->act_cir + 0;
 
@@ -246,18 +285,30 @@ class PeriodController extends Controller
         return inertia('PeriodRatios', [
             'period' => $period,
         ]);
-
     }
 
-    public function calculateRatios(Period $period): RedirectResponse {
+    public function calculateRatios(Period $period): RedirectResponse
+    {
 
         $period->load('ratios');
 
-        if(!$period->ratios->isEmpty()) {
+        if (!$period->ratios->isEmpty()) {
             return redirect()->back(303)->with([
                 'alert' => [
                     'type' => 'Error',
                     'msg' => 'Ya has hecho un analisis de las razones de este periodo!'
+                ]
+            ]);
+        }
+
+        $period->load('balance_sheet');
+        $period->load('income_statement');
+
+        if ($period->balance_sheet->bs_account_details->isEmpty() && $period->income_statement->is_account_details->isEmpty()) {
+            return redirect()->back(303)->with([
+                'alert' => [
+                    'type' => 'Error',
+                    'msg' => 'No hay informacion suficiente para realizar el analisis!'
                 ]
             ]);
         }
@@ -329,6 +380,72 @@ class PeriodController extends Controller
             'alert' => [
                 'type' => 'Success',
                 'msg' => 'Analisis realizado correctamente!'
+            ]
+        ]);
+    }
+
+    function saveReportsInfo(Request $request, Period $period): RedirectResponse
+    {
+
+        $period->load('balance_sheet');
+        $period->load('income_statement');
+
+        if($period->balance_sheet->bs_account_details->isEmpty() && $period->income_statement->is_account_details->isEmpty()) {
+            return redirect()->back(303)->with([
+                'alert' => [
+                    'type' => 'Error',
+                    'msg' => 'No hay nada que actualizar!'
+                ]
+            ]);
+        }
+
+        foreach ($request->all() as $jsonRatio) {
+
+            $ratio = json_decode($jsonRatio);
+            $ratio->amount += 0;
+
+            if($ratio->statementType == 'balance_sheet') {
+                $period->balance_sheet->bs_account_details()
+                ->where('bs_account_id', '=', $ratio->id)
+                ->update([
+                    'ammount' => $ratio->amount
+                ]);
+            } else {
+                $period->income_statement->is_account_details()
+                ->where('is_account_id', '=', $ratio->id)
+                ->update([
+                    'ammount' => $ratio->amount
+                ]);
+            }
+        }
+
+        return redirect()->back(303)->with([
+            'alert' => [
+                'type' => 'Success',
+                'msg' => 'Estados Financieros Actualizados Correctamente!'
+            ]
+        ]);
+    }
+
+    function deleteAccountDetail(Request $request, Period $period): RedirectResponse {
+
+        $period->load('balance_sheet');
+        $period->load('income_statement');
+
+        if($request['statementType'] == 'balance_sheet') {
+            $period->balance_sheet->bs_account_details()
+            ->where('id', '=', $request->input('id'))
+            ->delete();
+        } else {
+            $period->income_statement->is_account_details()
+            ->where('id', '=', $request->input('id'))
+            ->delete();
+        }
+
+        return redirect()->back(303)->with([
+            'alert' => [
+                'type' => 'Success',
+                'msg' => 'Cuenta eliminada correctamente!'
             ]
         ]);
     }
